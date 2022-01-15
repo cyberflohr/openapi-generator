@@ -17,7 +17,7 @@
 {{>xmlAnnotation}}
 {{/withXml}}
 {{>generatedAnnotation}}
-public class {{classname}} {{#parent}}extends {{{.}}}{{/parent}}{{^parent}}{{#hateoas}}extends RepresentationModel<{{classname}}> {{/hateoas}}{{/parent}} {{#serializableModel}}implements Serializable{{/serializableModel}} {
+public class {{classname}} {{#parent}}extends {{{.}}}{{/parent}}{{^parent}}{{#hateoas}}extends RepresentationModel<{{classname}}> {{/hateoas}}{{/parent}} {{^vendorExtensions.x-implements}}{{#serializableModel}}implements Serializable{{/serializableModel}}{{/vendorExtensions.x-implements}} {{#vendorExtensions.x-implements}}{{#-first}}implements {{#serializableModel}}Serializable, {{/serializableModel}}{{{.}}}{{/-first}}{{^-first}}, {{{.}}}{{/-first}}{{#-last}} {{/-last}}{{/vendorExtensions.x-implements}}{
 {{#serializableModel}}
 
   private static final long serialVersionUID = 1L;
@@ -98,9 +98,7 @@ public class {{classname}} {{#parent}}extends {{{.}}}{{/parent}}{{^parent}}{{#ha
     {{/openApiNullable}}
     return this;
   }
-  {{/isArray}}
-  {{#isMap}}
-
+{{/isArray}}{{#isMap}}{{#items.datatypeWithEnum}}
   public {{classname}} put{{nameInCamelCase}}Item(String key, {{{items.datatypeWithEnum}}} {{name}}Item) {
     {{^required}}
     if (this.{{name}} == null) {
@@ -110,10 +108,8 @@ public class {{classname}} {{#parent}}extends {{{.}}}{{/parent}}{{^parent}}{{#ha
     this.{{name}}.put(key, {{name}}Item);
     return this;
   }
-  {{/isMap}}
-  {{! end feature: fluent setter methods }}
+{{/items.datatypeWithEnum}}{{/isMap}}{{! end feature: fluent setter methods }}
   {{! begin feature: getter and setter }}
-
   /**
   {{#description}}
    * {{{.}}}
